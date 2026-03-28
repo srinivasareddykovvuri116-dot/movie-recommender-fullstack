@@ -5,14 +5,13 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Load env
+# 🔐 Load env
 load_dotenv()
-
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
 app = FastAPI()
 
-# CORS
+# 🌐 CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,24 +20,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
-similarity_df = None
+# 🔥 Globals
+similarity = None
 movies_list = None
 
+# 🚀 Load model safely
 def load_model():
-    global similarity_df, movies_list
+    global similarity, movies_list
 
     if not os.path.exists("model/similarity.pkl"):
-        print("⚡ Model not found. Building now... - main.py:33")
+        print("⚡ Model not found. Building now... - main.py:32")
         import model  # runs model.py
 
-    print("✅ Loading model... - main.py:36")
-    similarity_df = pickle.load(open("model/similarity.pkl", "rb"))
+    print("✅ Loading model... - main.py:35")
+    similarity = pickle.load(open("model/similarity.pkl", "rb"))
     movies_list = pickle.load(open("model/movies.pkl", "rb"))
 
-# 🔥 LOAD MODEL SAFELY
+# 🔥 Call once
 load_model()
+
 # -------------------- ROUTES --------------------
 
 @app.get("/")
@@ -53,14 +53,27 @@ def get_movies():
 
 @app.get("/recommend/{movie}")
 def recommend(movie: str):
-    if movie not in similarity_df.index:
+    if movie not in movies_list:
         return {"recommendations": []}
 
-    similar = similarity_df[movie].sort_values(ascending=False)[1:6]
-    return {"recommendations": list(similar.index)}
+    try:
+        idx = movies_list.index(movie)
+
+        # Get similarity scores
+        sim_scores = list(enumerate(similarity[idx]))
+
+        # Sort movies based on similarity
+        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:6]
+
+        movie_indices = [i[0] for i in sim_scores]
+
+        return {"recommendations": [movies_list[i] for i in movie_indices]}
+
+    except Exception:
+        return {"recommendations": []}
 
 
-# 🔥 NEW: Secure OMDb API route
+# 🔥 Secure OMDb API route
 @app.get("/movie-details/{movie}")
 def get_movie_details(movie: str):
     try:

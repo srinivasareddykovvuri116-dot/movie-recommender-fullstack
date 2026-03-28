@@ -1,40 +1,30 @@
 import pandas as pd
-from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import os
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
 
-
-
+# 📁 Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 movies_path = os.path.join(BASE_DIR, "data", "movies.csv")
-ratings_path = os.path.join(BASE_DIR, "data", "ratings.csv")
 
-movies = pd.read_csv("../data/movies.csv")
-ratings = pd.read_csv("../data/ratings.csv")
-# Merge
-data = pd.merge(ratings, movies, on="movieId")
+# 📊 Load data
+movies = pd.read_csv(movies_path)
 
-# Matrix
-movie_matrix = data.pivot_table(
-    index='title',
-    columns='userId',
-    values='rating'
-).fillna(0)
+# 🧹 Clean genres
+movies['genres'] = movies['genres'].fillna('').str.replace('|', ' ', regex=False)
 
-# Similarity
-similarity = cosine_similarity(movie_matrix)
+# ⚡ TF-IDF Vectorization
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(movies['genres'])
 
-similarity_df = pd.DataFrame(
-    similarity,
-    index=movie_matrix.index,
-    columns=movie_matrix.index
-)
+# ⚡ Compute similarity (efficient)
+similarity = linear_kernel(tfidf_matrix, tfidf_matrix)
 
-# Save
+# 🎯 Save
 os.makedirs("model", exist_ok=True)
 
-pickle.dump(similarity_df, open("model/similarity.pkl", "wb"))
-pickle.dump(movie_matrix.index.tolist(), open("model/movies.pkl", "wb"))
+pickle.dump(similarity, open("model/similarity.pkl", "wb"))
+pickle.dump(movies['title'].tolist(), open("model/movies.pkl", "wb"))
 
-print("✅ Model built successfully! - model.py:40")
+print("✅ Lightweight model built successfully! - model.py:30")
