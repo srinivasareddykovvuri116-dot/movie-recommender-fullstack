@@ -4,11 +4,12 @@
 
 
 
-
+backend/model/
+*.pkl
 
 .env
 __pycache__/
-*.pkl
+
 node_modules/
 /.pnp
 .pnp.js
