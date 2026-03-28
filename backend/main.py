@@ -21,9 +21,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load model (FAST ⚡)
+
+
+# 🔥 STEP 1: Build model if not exists
+if not os.path.exists("model/similarity.pkl"):
+    print("⚡ Model not found. Building now... - main.py:28")
+    import model   # this runs model.py
+
+# 🔥 STEP 2: Load model AFTER build
 similarity_df = pickle.load(open("model/similarity.pkl", "rb"))
 movies_list = pickle.load(open("model/movies.pkl", "rb"))
+
+
 
 # -------------------- ROUTES --------------------
 
