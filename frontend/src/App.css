@@ -1,0 +1,133 @@
+
+
+input {
+  padding: 10px;
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+.movie-list {
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.movie-item {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.movie-item:hover {
+  background-color: #333;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+body {
+  margin: 0;
+  background-color: #111;
+  color: white;
+  font-family: Arial;
+}
+
+.app {
+  text-align: center;
+  padding: 20px;
+}
+
+/* 🔥 GRID (Netflix style) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+/* 🔥 CARD */
+.card {
+  background: #222;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* 🔥 POSTER IMAGE (2:3 ratio like your image) */
+.card img {
+  width: 100%;
+  height: 330px;       /* 👈 perfect for portrait */
+  object-fit: cover;   /* keeps proper crop */
+  border-radius: 10px;
+}
+
+/* 🔥 HOVER EFFECT */
+.card:hover {
+  transform: scale(1.08);
+  background: #333;
+}
+
+/* 🔥 TITLE */
+.title {
+  font-size: 14px;
+  padding: 8px;
+  text-align: center;
+}
+
+
+
+.hero {
+  position: relative;
+  height: 400px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(40%) blur(2px);
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50px;
+  transform: translateY(-50%);
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 40px;
+}
+
+.hero-content button {
+  padding: 10px 20px;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.genre {
+  font-size: 12px;
+  padding: 0 10px;
+  color: #bbb;
+}
+
+.plot {
+  font-size: 12px;
+  padding: 5px 10px;
+  color: #aaa;
+  text-align: left;
+}
