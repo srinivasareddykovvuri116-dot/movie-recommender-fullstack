@@ -23,17 +23,22 @@ app.add_middleware(
 
 
 
-# 🔥 STEP 1: Build model if not exists
-if not os.path.exists("model/similarity.pkl"):
-    print("⚡ Model not found. Building now... - main.py:28")
-    import model   # this runs model.py
+similarity_df = None
+movies_list = None
 
-# 🔥 STEP 2: Load model AFTER build
-similarity_df = pickle.load(open("model/similarity.pkl", "rb"))
-movies_list = pickle.load(open("model/movies.pkl", "rb"))
+def load_model():
+    global similarity_df, movies_list
 
+    if not os.path.exists("model/similarity.pkl"):
+        print("⚡ Model not found. Building now... - main.py:33")
+        import model  # runs model.py
 
+    print("✅ Loading model... - main.py:36")
+    similarity_df = pickle.load(open("model/similarity.pkl", "rb"))
+    movies_list = pickle.load(open("model/movies.pkl", "rb"))
 
+# 🔥 LOAD MODEL SAFELY
+load_model()
 # -------------------- ROUTES --------------------
 
 @app.get("/")

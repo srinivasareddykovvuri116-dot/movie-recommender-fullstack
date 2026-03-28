@@ -10,8 +10,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 movies_path = os.path.join(BASE_DIR, "data", "movies.csv")
 ratings_path = os.path.join(BASE_DIR, "data", "ratings.csv")
 
-movies = pd.read_csv("data/movies.csv")
-ratings = pd.read_csv("data/ratings.csv")
+movies = pd.read_csv("../data/movies.csv")
+ratings = pd.read_csv("../data/ratings.csv")
 # Merge
 data = pd.merge(ratings, movies, on="movieId")
 
